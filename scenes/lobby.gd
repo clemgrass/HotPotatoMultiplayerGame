@@ -99,8 +99,13 @@ func _ready():
 
 	_go_to_menu(start_menu)
 	
-	user.text = OS.get_environment("USERNAME") + (str(randi() % 1000) if Engine.is_editor_hint()
- else "")
+	# USERNAME only exists on Windows; Linux and macOS use USER.
+	var username = OS.get_environment("USERNAME")
+	if username.is_empty():
+		username = OS.get_environment("USER")
+	if username.is_empty():
+		username = "Player"
+	user.text = username + (str(randi() % 1000) if Engine.is_editor_hint() else "")
 	
 	Game.upnp_completed.connect(_on_upnp_completed, 1)
 
